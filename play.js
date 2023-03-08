@@ -12,20 +12,20 @@ class Button{
     this.hue = description.hue;
     this.sound = loadSound(description.file);
     //What is paint/ what does this line do?
-    this.paint(25);
+    this.backgroundOpacity(25);
   }
 
-  //What does this function do?
-  //I'm guessing it has something to do with the buttons in the game when they are clicked
-  paint(level){
-    const background = `hsl(${this.hue}, 100%, ${level}%)`;
+  //
+  backgroundOpacity(level){
+    const background = `hsl(${this.hue}, 75%, ${level}%)`;
     this.el.style.backgroundColor = background;
   }
 
+  //This functions deals with the color when clicked on or the sequence is running
   async press(volume) {
-    this.paint(50);
-    await this.play(volume);
     this.paint(25);
+    await this.play(volume);
+    this.backgroundOpacity(5);
   }
 
   async play(volume = 1.0) {
@@ -35,6 +35,36 @@ class Button{
       this.sound.play();
     });
   }
+}
+class Game {
+  //Type: Map
+  buttons;
+  //Type: Boolean
+  allowPlayer;
+  //Type: Vector
+  sequence;
+  //Type: Number of some sort
+  playerPlaybackPos;
+  //Type: Sound(?)
+  mistakeSound;
 
+  constructor() {
+    this.buttons = new Map();
+    this.allowPlayer = false;
+    this.sequence = [];
+    this.playerPlaybackPos = 0;
+    this.mistakeSound = loadSound('error.mp3');
+
+    //I think this assigns a sound and a hue to each button
+    document.querySelectorAll('.game-button').forEach((el, i) => {
+      if(i < btnDescript.length) {
+        this.buttons.set(el.id, new Button(btnDescript[i], el));
+      }
+    });
+
+    const playerEl = document.querySelector('.player-name');
+    playerEl.textContent = this.getPlayerName();
+
+  }
 
 }
