@@ -71,6 +71,9 @@ class Game {
       this.allowPlayer = false;
       await this.buttons.get(button.id).press(1.0);
 
+      /*This is statement checks to see if the player clicked the right button. If they did
+      then a button will be added to the sequence vector, the players score will be updated
+      to be 1 less than the length of the sequence vector. I'm still not sure what playerPlaybackPos is used for tho*/
       if(this.sequence[this.playerPlaybackPos].el.id === button.id){
         this.playerPlaybackPos++;
         if(this.playerPlaybackPos === this.sequence.length){
@@ -88,14 +91,21 @@ class Game {
     }
   }
 
+  //activates when the reset button is pushed
   async reset(){
     this.allowPlayer = false;
     this.playerPlaybackPos = 0;
+    //Sets the sequence vector to empty
     this.sequence = [];
+    //Resets the score
     this.updateScore('--');
+    //Highlights every button on the Simon board once
     await this.buttonDance(1);
+    //Adds button to the sequence vector so the game can begin
     this.addButton();
+    //Plays the sequence vector
     await this.playSequence();
+    //Allows the player to play and click buttons
     this.allowPlayer = true;
   }
 
@@ -160,6 +170,7 @@ class Game {
     }
 
     if(!found){
+      //if the 
       scores.push(newScore);
     }
     if(scores.length > 10){
@@ -169,7 +180,7 @@ class Game {
     return scores;
   }
 }
-
+//Creates new game item
 const game = new Game();
 
 function delay(milliseconds){
@@ -179,7 +190,7 @@ function delay(milliseconds){
     }, milliseconds);
   });
 }
-
+//Loads the sounds fromt the assets file
 function loadSound(fileName){
   return new Audio('assets/' + fileName)
 }
